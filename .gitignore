@@ -10,4 +10,4 @@ obj/
 .idea/
 
 # Ignore logs
-*.log
+*.log"appsettings.json" 
