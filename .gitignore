@@ -11,3 +11,4 @@ obj/
 
 # Ignore logs
 *.log"appsettings.json" 
+"appsettings.json" 
