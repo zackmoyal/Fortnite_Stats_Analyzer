@@ -161,7 +161,7 @@
             @if (Model.PerInput?.KeyboardMouse?.Solo != null)
             {
                 <tr>
-                    <td>Solo (Keyboard & Mouse)</td>
+                    <td>Solo (Computer)</td>
                     <td>@Model.PerInput.KeyboardMouse.Solo.Kd</td>
                     <td>@Model.PerInput.KeyboardMouse.Solo.Winrate</td>
                     <td>@Model.PerInput.KeyboardMouse.Solo.PlaceTop1</td>
@@ -173,7 +173,7 @@
             @if (Model.PerInput?.KeyboardMouse?.Duo != null)
             {
                 <tr>
-                    <td>Duo (Keyboard & Mouse)</td>
+                    <td>Duo (Computer)</td>
                     <td>@Model.PerInput.KeyboardMouse.Duo.Kd</td>
                     <td>@Model.PerInput.KeyboardMouse.Duo.Winrate</td>
                     <td>@Model.PerInput.KeyboardMouse.Duo.PlaceTop1</td>
@@ -185,7 +185,7 @@
             @if (Model.PerInput?.KeyboardMouse?.Squad != null)
             {
                 <tr>
-                    <td>Squad (Keyboard & Mouse)</td>
+                    <td>Squad (Computer)</td>
                     <td>@Model.PerInput.KeyboardMouse.Squad.Kd</td>
                     <td>@Model.PerInput.KeyboardMouse.Squad.Winrate</td>
                     <td>@Model.PerInput.KeyboardMouse.Squad.PlaceTop1</td>
@@ -229,39 +229,45 @@
     <!-- Feedback for Solo (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Solo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Solo.Kd, Model.PerInput.KeyboardMouse.Solo.Winrate, Model.PerInput.KeyboardMouse.Solo.PlaceTop1, Model.PerInput.KeyboardMouse.Solo.Kills, Model.PerInput.KeyboardMouse.Solo.MatchesPlayed, "Solo (Keyboard & Mouse)"))</p>
+        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Solo.Kd, Model.PerInput.KeyboardMouse.Solo.Winrate, Model.PerInput.KeyboardMouse.Solo.PlaceTop1, Model.PerInput.KeyboardMouse.Solo.Kills, Model.PerInput.KeyboardMouse.Solo.MatchesPlayed, "Solo (Computer)"))</p>
         <hr />
     }
 
     <!-- Feedback for Duo (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Duo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Duo.Kd, Model.PerInput.KeyboardMouse.Duo.Winrate, Model.PerInput.KeyboardMouse.Duo.PlaceTop1, Model.PerInput.KeyboardMouse.Duo.Kills, Model.PerInput.KeyboardMouse.Duo.MatchesPlayed, "Duo (Keyboard & Mouse)"))</p>
+        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Duo.Kd, Model.PerInput.KeyboardMouse.Duo.Winrate, Model.PerInput.KeyboardMouse.Duo.PlaceTop1, Model.PerInput.KeyboardMouse.Duo.Kills, Model.PerInput.KeyboardMouse.Duo.MatchesPlayed, "Duo (Computer)"))</p>
         <hr />
     }
 
     <!-- Feedback for Squad (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Squad != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Squad.Kd, Model.PerInput.KeyboardMouse.Squad.Winrate, Model.PerInput.KeyboardMouse.Squad.PlaceTop1, Model.PerInput.KeyboardMouse.Squad.Kills, Model.PerInput.KeyboardMouse.Squad.MatchesPlayed, "Squad (Keyboard & Mouse)"))</p>
+        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Squad.Kd, Model.PerInput.KeyboardMouse.Squad.Winrate, Model.PerInput.KeyboardMouse.Squad.PlaceTop1, Model.PerInput.KeyboardMouse.Squad.Kills, Model.PerInput.KeyboardMouse.Squad.MatchesPlayed, "Squad (Computer)"))</p>
         <hr />
     }
 </div>
 
 @functions {
-    // if else based feedback generation logic with more detailed analysis
     private string GenerateFeedback(double kd, double winrate, int topPlacements, int totalKills, int matchesPlayed, string gameMode)
     {
         string feedback = $"<span class=\"feedback-title\">{gameMode}:</span> ";
+        bool needsContrast = false;
 
-        // K/D Ratio based feedback
+        // List of contrast words, including "However"
+        string[] contrastWords = { "However, ", "On the other hand, ", "That being said, ", "Nevertheless, ", "Even so, ", "Despite that, ", "Conversely, " };
+        Random rand = new Random();
+
+        // K/D Ratio Feedback
         if (kd < 0.5)
         {
             feedback += "Your kill-to-death ratio is significantly below average. Consider working on your aiming skills and movement to avoid getting eliminated early. ";
+            needsContrast = true;
         }
         else if (kd >= 0.5 && kd < 1.0)
         {
             feedback += "Your kill-to-death ratio is below average. Try to improve your positioning and awareness in battles to gain an edge over opponents. ";
+            needsContrast = true;
         }
         else if (kd >= 1.0 && kd < 2.0)
         {
@@ -272,64 +278,87 @@
             feedback += "Great job! Your kill-to-death ratio is excellent, and you’re dominating your fights. Keep up the strong performance! ";
         }
 
-        // Win rate based feedback
+        // Win Rate Feedback - Only insert contrast word if K/D and Win Rate contradict each other
         if (winrate < 0.05)
         {
-            feedback += "However, your win rate is low. Consider focusing more on game strategy, including your rotations and late-game positioning. ";
+            if (needsContrast && kd >= 1.0)
+            {
+                feedback += contrastWords[rand.Next(contrastWords.Length)];
+            }
+            feedback += "your win rate is low. Consider focusing more on game strategy, including your rotations and late-game positioning. ";
         }
         else if (winrate >= 0.05 && winrate < 0.15)
         {
-            feedback += "Your win rate is decent but could be improved. Work on improving your decision-making during critical moments in the game. ";
+            if (needsContrast && kd >= 1.0)
+            {
+                feedback += contrastWords[rand.Next(contrastWords.Length)];
+            }
+            feedback += "your win rate is decent but could be improved. Work on improving your decision-making during critical moments in the game. ";
         }
         else if (winrate >= 0.15)
         {
-            feedback += "Your win rate is strong, reflecting good decision-making and game awareness. Keep refining your strategy to continue improving. ";
+            if (needsContrast && kd < 1.0)
+            {
+                feedback += contrastWords[rand.Next(contrastWords.Length)];
+            }
+            feedback += "your win rate is strong, reflecting good decision-making and game awareness. Keep refining your strategy to continue improving. ";
         }
 
-        // Top 1 placements feedback
+        needsContrast = false; // Reset for next section
+
+        // Top 1 Placements Feedback - Only insert contrast word if it contradicts win rate
         if (topPlacements == 0)
         {
-            feedback += "You haven’t managed to secure a Victory Royale yet. Keep grinding, and focus on staying calm during high-pressure situations!";
+            if (winrate >= 0.15) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
+            feedback += "you haven’t managed to secure a Victory Royale yet. Keep grinding, and focus on staying calm during high-pressure situations! ";
         }
         else if (topPlacements > 0 && topPlacements < 5)
         {
-            feedback += "You’ve managed a few top 1 placements, which is impressive. With a bit more practice, you can increase your wins!";
+            feedback += "You’ve managed a few top 1 placements, which is impressive. With a bit more practice, you can increase your wins! ";
         }
         else if (topPlacements >= 5)
         {
-            feedback += "You’ve achieved multiple Victory Royales, showing great skill! Keep pushing for more!";
+            feedback += "You’ve achieved multiple Victory Royales, showing great skill! Keep pushing for more! ";
         }
 
-        // Total Kills feedback
+        needsContrast = false; // Reset
+
+        // Total Kills Feedback - Only use contrast word if it contradicts K/D
         if (totalKills < 100)
         {
-            feedback += " Your total kills are relatively low, suggesting you might benefit from engaging in more fights to improve your combat skills. ";
+            if (kd >= 1.0) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
+            feedback += "your total kills are relatively low, suggesting you might benefit from engaging in more fights to improve your combat skills. ";
         }
         else if (totalKills >= 100 && totalKills < 500)
         {
-            feedback += " You have a solid number of kills! This indicates you’re actively engaging in battles and improving. Keep working on your techniques. ";
+            feedback += "You have a solid number of kills! This indicates you’re actively engaging in battles and improving. Keep working on your techniques. ";
         }
         else if (totalKills >= 500)
         {
-            feedback += " Your kill count is very high! You’re clearly skilled in combat. Keep up the amazing work! ";
+            feedback += "Your kill count is very high! You’re clearly skilled in combat. Keep up the amazing work! ";
         }
 
-        // Matches Played feedback
+        needsContrast = false; // Reset
+
+        // Matches Played Feedback - Insert contrast word only if needed
         if (matchesPlayed < 50)
         {
-            feedback += " You haven’t played many matches yet. Keep practicing to gain more experience and refine your strategies.";
+            if (totalKills >= 100) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
+            feedback += "you haven’t played many matches yet. Keep practicing to gain more experience and refine your strategies.";
         }
         else if (matchesPlayed >= 50 && matchesPlayed < 200)
         {
-            feedback += " You have a good amount of experience from the matches you’ve played. Keep building on that foundation to improve even more.";
+            feedback += "You have a good amount of experience from the matches you’ve played. Keep building on that foundation to improve even more.";
         }
         else if (matchesPlayed >= 200)
         {
-            feedback += " You’ve played a lot of matches, showing a high level of commitment and experience. Keep using that experience to enhance your skills!";
+            feedback += "You’ve played a lot of matches, showing a high level of commitment and experience. Keep using that experience to enhance your skills!";
         }
 
         return feedback;
     }
 }
+
+
 
 <script src="~/js/tabs.js"></script>

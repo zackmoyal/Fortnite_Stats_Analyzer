@@ -10,7 +10,7 @@ namespace FortniteStatsAnalyzer.Services
 {
     public class FortniteStatsService(IOptions<FortniteApiSettings> settings, ILogger<FortniteStatsService> logger)
     {
-        private readonly HttpClient _client = new HttpClient();
+        private readonly HttpClient _client = new();
         private readonly string _apiKey = settings.Value.ApiKey;
         private readonly ILogger<FortniteStatsService> _logger = logger;
 
