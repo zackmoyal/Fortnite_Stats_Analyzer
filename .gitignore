@@ -6,8 +6,13 @@ obj/
 .vs/
 *.user
 *.suo
+
+# Editor configs
 .vscode/
 .idea/
 
 # Ignore logs
 *.log
+
+# Local development secrets
+appsettings.Development.json
