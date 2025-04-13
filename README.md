@@ -44,7 +44,6 @@
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) (or any compatible IDE)
 
 ### 📥 Installation
-### 📥 Installation
 
 1. Clone the repository:
 
