@@ -1,6 +1,13 @@
 /* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Fortnite Font */
+@font-face {
+    font-family: 'FortniteBold';
+    src: url('/fonts/fortnite.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 /* Basic Setup */
 html {
@@ -20,7 +27,7 @@ html {
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
     border-bottom: 3px solid #feda4a; /* Fortnite yellow border */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    font-family: 'Bangers', cursive; /* Fortnite font */
+    font-family: 'FortniteBold', sans-serif; /* Fortnite font */
     position: sticky;
     top: 0;
     transition: background-color 0.3s ease-in-out;
@@ -68,7 +75,7 @@ body {
     background: url('/images/fortnite-bg.png') no-repeat center center fixed;
     background-size: cover;
     color: white;
-    font-family: 'Bangers', cursive;
+    font-family: 'FortniteBold', sans-serif;
 }
 
 main {
@@ -131,7 +138,7 @@ main {
 h1, h2 {
     text-align: center;
     color: #feda4a; /* Fortnite yellow */
-    font-family: 'Bangers', cursive;
+    font-family: 'FortniteBold', sans-serif;
     text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* Shadow for headers */
 }
 
@@ -348,7 +355,7 @@ table {
         padding: 10px;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
         border-bottom: 1px solid #ddd;
-        font-family: 'Bangers', cursive;
+        font-family: 'FortniteBold', sans-serif;
     }
 
     table td {

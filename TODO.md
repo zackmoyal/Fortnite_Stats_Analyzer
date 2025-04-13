@@ -1,9 +1,9 @@
 # ✅ Project TODO List
 
 ## 🟢 Priority Tasks
-- [ ] Fix username validation logic
-- [ ] Integrate FortniteBold font (FontBolt)
-- [ ] Improve API error handling
+- [x] Fix username validation logic
+- [x] Integrate FortniteBold font (FontBolt)
+- [x] Improve API error handling
 
 ## 🟡 Mid-Level
 - [ ] Create reusable UI component for player cards
