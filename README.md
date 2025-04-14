@@ -3,7 +3,6 @@
 **Fortnite Stats Analyzer** is a full-stack web application that provides detailed real-time statistics and insights for Fortnite players. By integrating with the [FortniteAPI.io](https://fortniteapi.io), users can enter any Fortnite username to instantly view and analyze performance data such as match history, kill/death ratios, win rates, and total kills.
 
 ## 🚀 Features
-## 🚀 Features
 
 - 🎯 **Player Stats Lookup**: View key performance metrics like K/D ratio, win rate, and total kills across Solo, Duo, and Squad modes.
 - 📱 **Responsive UI**: Clean and intuitive interface with a Fortnite-inspired design that works great on both desktop and mobile.
@@ -16,7 +15,6 @@
 - ⚡ **Instant Search**: Input a username and get real-time data from the Fortnite API with minimal delay.
 - 🔐 **Environment-Based API Key Security**: Utilizes environment variables to securely manage API access.
 
-## 🛠 Technologies Used
 ## 🛠 Technologies Used
 
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap
@@ -35,13 +33,6 @@
 - **API**: [FortniteAPI.io](https://fortniteapi.io)
 - **Hosting**: Render (Dockerized Deployment)
 - **Development Tools**: Visual Studio 2022, Git, GitHub
-
-## 🧩 Getting Started (Local Setup)
-
-### ✅ Prerequisites
-
-- [.NET Core SDK 8.0+](https://dotnet.microsoft.com/en-us/download)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) (or any compatible IDE)
 
 ### 📥 Installation
 
