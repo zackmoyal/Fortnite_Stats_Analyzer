@@ -8,9 +8,12 @@
 - Integrated FontBolt Fortnite font for proper casing
 - Improved API error handling with retry logic
 - Added special case handling for known valid usernames
+- Fixed authorization header implementation for API requests
+- Added proper HTTP Headers namespace for API calls
 
 ## 🔧 In Progress
 - Monitoring API stability with new validation logic
+- Testing improved authorization header implementation
 
 ## 🐞 Known Issues
 - None currently identified
@@ -19,3 +22,4 @@
 - Add global leaderboard comparison
 - Implement search history tracking
 - Add dark mode toggle
+- Add loading indicator during API calls
