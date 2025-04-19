@@ -1,4 +1,5 @@
 ﻿@model FortniteStatsAnalyzer.Models.FortniteStatsResponse
+@inject FortniteStatsAnalyzer.Services.IOpenAIService OpenAIService
 @{
     ViewData["Title"] = "Player Stats";
 }
@@ -87,21 +88,21 @@
     <!-- Feedback for Solo in Global Stats -->
     @if (Model.GlobalStats?.Solo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.GlobalStats.Solo.Kd, Model.GlobalStats.Solo.Winrate, Model.GlobalStats.Solo.PlaceTop1, Model.GlobalStats.Solo.Kills, Model.GlobalStats.Solo.MatchesPlayed, "Solo"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.GlobalStats.Solo.Kd, Model.GlobalStats.Solo.Winrate, Model.GlobalStats.Solo.PlaceTop1, Model.GlobalStats.Solo.Kills, Model.GlobalStats.Solo.MatchesPlayed, "Solo"))</p>
         <hr />
     }
 
     <!-- Feedback for Duo in Global Stats -->
     @if (Model.GlobalStats?.Duo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.GlobalStats.Duo.Kd, Model.GlobalStats.Duo.Winrate, Model.GlobalStats.Duo.PlaceTop1, Model.GlobalStats.Duo.Kills, Model.GlobalStats.Duo.MatchesPlayed, "Duo"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.GlobalStats.Duo.Kd, Model.GlobalStats.Duo.Winrate, Model.GlobalStats.Duo.PlaceTop1, Model.GlobalStats.Duo.Kills, Model.GlobalStats.Duo.MatchesPlayed, "Duo"))</p>
         <hr />
     }
 
     <!-- Feedback for Squad in Global Stats -->
     @if (Model.GlobalStats?.Squad != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.GlobalStats.Squad.Kd, Model.GlobalStats.Squad.Winrate, Model.GlobalStats.Squad.PlaceTop1, Model.GlobalStats.Squad.Kills, Model.GlobalStats.Squad.MatchesPlayed, "Squad"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.GlobalStats.Squad.Kd, Model.GlobalStats.Squad.Winrate, Model.GlobalStats.Squad.PlaceTop1, Model.GlobalStats.Squad.Kills, Model.GlobalStats.Squad.MatchesPlayed, "Squad"))</p>
         <hr />
     }
 </div>
@@ -208,154 +209,73 @@
     <!-- Feedback for Solo (Gamepad) -->
     @if (Model.PerInput?.Gamepad?.Solo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.Gamepad.Solo.Kd, Model.PerInput.Gamepad.Solo.Winrate, Model.PerInput.Gamepad.Solo.PlaceTop1, Model.PerInput.Gamepad.Solo.Kills, Model.PerInput.Gamepad.Solo.MatchesPlayed, "Solo (Console)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.Gamepad.Solo.Kd, Model.PerInput.Gamepad.Solo.Winrate, Model.PerInput.Gamepad.Solo.PlaceTop1, Model.PerInput.Gamepad.Solo.Kills, Model.PerInput.Gamepad.Solo.MatchesPlayed, "Solo (Console)"))</p>
         <hr />
     }
 
     <!-- Feedback for Duo (Gamepad) -->
     @if (Model.PerInput?.Gamepad?.Duo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.Gamepad.Duo.Kd, Model.PerInput.Gamepad.Duo.Winrate, Model.PerInput.Gamepad.Duo.PlaceTop1, Model.PerInput.Gamepad.Duo.Kills, Model.PerInput.Gamepad.Duo.MatchesPlayed, "Duo (Console)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.Gamepad.Duo.Kd, Model.PerInput.Gamepad.Duo.Winrate, Model.PerInput.Gamepad.Duo.PlaceTop1, Model.PerInput.Gamepad.Duo.Kills, Model.PerInput.Gamepad.Duo.MatchesPlayed, "Duo (Console)"))</p>
         <hr />
     }
 
     <!-- Feedback for Squad (Gamepad) -->
     @if (Model.PerInput?.Gamepad?.Squad != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.Gamepad.Squad.Kd, Model.PerInput.Gamepad.Squad.Winrate, Model.PerInput.Gamepad.Squad.PlaceTop1, Model.PerInput.Gamepad.Squad.Kills, Model.PerInput.Gamepad.Squad.MatchesPlayed, "Squad (Console)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.Gamepad.Squad.Kd, Model.PerInput.Gamepad.Squad.Winrate, Model.PerInput.Gamepad.Squad.PlaceTop1, Model.PerInput.Gamepad.Squad.Kills, Model.PerInput.Gamepad.Squad.MatchesPlayed, "Squad (Console)"))</p>
         <hr />
     }
 
     <!-- Feedback for Solo (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Solo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Solo.Kd, Model.PerInput.KeyboardMouse.Solo.Winrate, Model.PerInput.KeyboardMouse.Solo.PlaceTop1, Model.PerInput.KeyboardMouse.Solo.Kills, Model.PerInput.KeyboardMouse.Solo.MatchesPlayed, "Solo (Computer)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.KeyboardMouse.Solo.Kd, Model.PerInput.KeyboardMouse.Solo.Winrate, Model.PerInput.KeyboardMouse.Solo.PlaceTop1, Model.PerInput.KeyboardMouse.Solo.Kills, Model.PerInput.KeyboardMouse.Solo.MatchesPlayed, "Solo (Computer)"))</p>
         <hr />
     }
 
     <!-- Feedback for Duo (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Duo != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Duo.Kd, Model.PerInput.KeyboardMouse.Duo.Winrate, Model.PerInput.KeyboardMouse.Duo.PlaceTop1, Model.PerInput.KeyboardMouse.Duo.Kills, Model.PerInput.KeyboardMouse.Duo.MatchesPlayed, "Duo (Computer)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.KeyboardMouse.Duo.Kd, Model.PerInput.KeyboardMouse.Duo.Winrate, Model.PerInput.KeyboardMouse.Duo.PlaceTop1, Model.PerInput.KeyboardMouse.Duo.Kills, Model.PerInput.KeyboardMouse.Duo.MatchesPlayed, "Duo (Computer)"))</p>
         <hr />
     }
 
     <!-- Feedback for Squad (Keyboard & Mouse) -->
     @if (Model.PerInput?.KeyboardMouse?.Squad != null)
     {
-        <p>@Html.Raw(GenerateFeedback(Model.PerInput.KeyboardMouse.Squad.Kd, Model.PerInput.KeyboardMouse.Squad.Winrate, Model.PerInput.KeyboardMouse.Squad.PlaceTop1, Model.PerInput.KeyboardMouse.Squad.Kills, Model.PerInput.KeyboardMouse.Squad.MatchesPlayed, "Squad (Computer)"))</p>
+        <p>@Html.Raw(await GenerateFeedback(Model.PerInput.KeyboardMouse.Squad.Kd, Model.PerInput.KeyboardMouse.Squad.Winrate, Model.PerInput.KeyboardMouse.Squad.PlaceTop1, Model.PerInput.KeyboardMouse.Squad.Kills, Model.PerInput.KeyboardMouse.Squad.MatchesPlayed, "Squad (Computer)"))</p>
         <hr />
     }
 </div>
 
 @functions {
-    private string GenerateFeedback(double kd, double winrate, int topPlacements, int totalKills, int matchesPlayed, string gameMode)
+    private async Task<string> GenerateFeedback(double kd, double winrate, int topPlacements, int totalKills, int matchesPlayed, string gameMode)
     {
-        string feedback = $"<span class=\"feedback-title\">{gameMode}:</span> ";
-        bool needsContrast = false;
+        try
+        {
+            var feedback = await OpenAIService.GenerateStatsFeedback(kd, winrate, topPlacements, totalKills, matchesPlayed, gameMode);
+            return $"<span class=\"feedback-title\">{gameMode}:</span> {feedback}";
+        }
+        catch (Exception)
+        {
+            // Fallback to original feedback logic if OpenAI fails
+            string feedback = $"<span class=\"feedback-title\">{gameMode}:</span> ";
+            
+            if (kd >= 1.0)
+                feedback += "Your K/D ratio shows strong combat skills. ";
+            else
+                feedback += "Focus on improving your combat skills through practice. ";
 
-        // List of contrast words, including "However"
-        string[] contrastWords = { "However, ", "On the other hand, ", "That being said, ", "Nevertheless, ", "Even so, ", "Despite that, ", "Conversely, " };
-        Random rand = new Random();
+            if (winrate >= 0.1)
+                feedback += "Your win rate demonstrates good strategic thinking. ";
+            else
+                feedback += "Work on late-game positioning to secure more victories. ";
 
-        // K/D Ratio Feedback
-        if (kd < 0.5)
-        {
-            feedback += "Your kill-to-death ratio is significantly below average. Consider working on your aiming skills and movement to avoid getting eliminated early. ";
-            needsContrast = true;
-        }
-        else if (kd >= 0.5 && kd < 1.0)
-        {
-            feedback += "Your kill-to-death ratio is below average. Try to improve your positioning and awareness in battles to gain an edge over opponents. ";
-            needsContrast = true;
-        }
-        else if (kd >= 1.0 && kd < 2.0)
-        {
-            feedback += "Your kill-to-death ratio is solid, showing you can hold your own in fights. Keep practicing to improve your consistency. ";
-        }
-        else if (kd >= 2.0)
-        {
-            feedback += "Great job! Your kill-to-death ratio is excellent, and you’re dominating your fights. Keep up the strong performance! ";
-        }
+            feedback += $"With {matchesPlayed} matches played, keep practicing to enhance your skills!";
 
-        // Win Rate Feedback - Only insert contrast word if K/D and Win Rate contradict each other
-        if (winrate < 0.05)
-        {
-            if (needsContrast && kd >= 1.0)
-            {
-                feedback += contrastWords[rand.Next(contrastWords.Length)];
-            }
-            feedback += "your win rate is low. Consider focusing more on game strategy, including your rotations and late-game positioning. ";
+            return feedback;
         }
-        else if (winrate >= 0.05 && winrate < 0.15)
-        {
-            if (needsContrast && kd >= 1.0)
-            {
-                feedback += contrastWords[rand.Next(contrastWords.Length)];
-            }
-            feedback += "your win rate is decent but could be improved. Work on improving your decision-making during critical moments in the game. ";
-        }
-        else if (winrate >= 0.15)
-        {
-            if (needsContrast && kd < 1.0)
-            {
-                feedback += contrastWords[rand.Next(contrastWords.Length)];
-            }
-            feedback += "your win rate is strong, reflecting good decision-making and game awareness. Keep refining your strategy to continue improving. ";
-        }
-
-        needsContrast = false; // Reset for next section
-
-        // Top 1 Placements Feedback - Only insert contrast word if it contradicts win rate
-        if (topPlacements == 0)
-        {
-            if (winrate >= 0.15) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
-            feedback += "you haven’t managed to secure a Victory Royale yet. Keep grinding, and focus on staying calm during high-pressure situations! ";
-        }
-        else if (topPlacements > 0 && topPlacements < 5)
-        {
-            feedback += "You’ve managed a few top 1 placements, which is impressive. With a bit more practice, you can increase your wins! ";
-        }
-        else if (topPlacements >= 5)
-        {
-            feedback += "You’ve achieved multiple Victory Royales, showing great skill! Keep pushing for more! ";
-        }
-
-        needsContrast = false; // Reset
-
-        // Total Kills Feedback - Only use contrast word if it contradicts K/D
-        if (totalKills < 100)
-        {
-            if (kd >= 1.0) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
-            feedback += "your total kills are relatively low, suggesting you might benefit from engaging in more fights to improve your combat skills. ";
-        }
-        else if (totalKills >= 100 && totalKills < 500)
-        {
-            feedback += "You have a solid number of kills! This indicates you’re actively engaging in battles and improving. Keep working on your techniques. ";
-        }
-        else if (totalKills >= 500)
-        {
-            feedback += "Your kill count is very high! You’re clearly skilled in combat. Keep up the amazing work! ";
-        }
-
-        needsContrast = false; // Reset
-
-        // Matches Played Feedback - Insert contrast word only if needed
-        if (matchesPlayed < 50)
-        {
-            if (totalKills >= 100) { feedback += contrastWords[rand.Next(contrastWords.Length)]; }
-            feedback += "you haven’t played many matches yet. Keep practicing to gain more experience and refine your strategies.";
-        }
-        else if (matchesPlayed >= 50 && matchesPlayed < 200)
-        {
-            feedback += "You have a good amount of experience from the matches you’ve played. Keep building on that foundation to improve even more.";
-        }
-        else if (matchesPlayed >= 200)
-        {
-            feedback += "You’ve played a lot of matches, showing a high level of commitment and experience. Keep using that experience to enhance your skills!";
-        }
-
-        return feedback;
     }
 }
 

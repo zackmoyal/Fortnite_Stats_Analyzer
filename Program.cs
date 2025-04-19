@@ -16,6 +16,9 @@ builder.Services.AddHttpClient();
 // Register FortniteStatsService
 builder.Services.AddScoped<FortniteStatsService>(); // Adds FortniteStatsService to the DI container
 
+// Register OpenAIService
+builder.Services.AddScoped<IOpenAIService, OpenAIService>();
+
 // Register FortniteApiSettings
 builder.Services.Configure<FortniteApiSettings>(builder.Configuration.GetSection("FortniteApiSettings")); // Binds FortniteApi settings from appsettings.json
 
