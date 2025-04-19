@@ -88,39 +88,10 @@ See the live version at:\
 - Dark mode toggle
 - API usage dashboard
 
-## 🐛 Bug Description
-
-When entering the Fortnite username `ZbiZniZ` (which is valid and has worked before), the application intermittently shows this error:
-"Invalid username. Please enter a valid Fortnite username."
-
-This breaks the feedback generation and blocks the user from seeing their stats. This behavior appears randomly and often occurs during demos. It is not due to the username being incorrect — the API (FortniteAPI.io) works with this name when tested separately.
-
-## 🎯 Tasks for Manus
-
-You are a senior developer experienced with ASP.NET Core MVC and full-stack development (C#, JS, HTML, CSS). Your goal is to:
-
-### ✅ Debug the Application
-
-- Investigate the cause of the username validation failure
-- Review both client-side JS and server-side C# logic
-- Handle possible API fetch issues, rate limiting, or async timing problems
-- Fix misleading validation logic if the API is returning valid results
-- Suggest improvements for user feedback and error messages
-
-### ✅ Fix the Font Issue
-
-- Currently, the font used makes lowercase letters look uppercase, which is misleading for usernames like `ZbiZniZ`. Please:
-  - Integrate the Fortnite-style font from FontBolt ([https://www.fontbolt.com/font/fortnite-font/](https://www.fontbolt.com/font/fortnite-font/)), which supports lowercase and is free to use
-  - Download and add the font to the project (`wwwroot/fonts`)
-  - Register it via CSS (`@font-face`) as `FortniteBold`
-  - Apply it to the site headings and username-related UI elements
-
-The goal is to retain the Fortnite feel while ensuring usernames display in proper case.
-
 ### ✅ Output Format
 
 - Summarize your analysis and changes in bullet points in chat
-- Generate a full downloadable `.txt` report named `BugAnalysis_FortniteAnalyzer.txt`
+- Generate a full downloadable `.txt` report
 
 ## 📄 License
 

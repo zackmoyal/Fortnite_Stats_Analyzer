@@ -34,6 +34,16 @@
 - Implemented exponential backoff with jitter to prevent thundering herd problems
 - Added comprehensive exception handling for network, timeout, and JSON parsing errors
 - Enhanced logging with request/response details for better diagnostics
+- Replaced default browser error dialogs with custom Fortnite-themed error modal
+- Implemented graceful handling of case mismatches in usernames
+- Added client-side validation to prevent default error dialogs
+
+## Layout Structure
+- Implemented flexbox-based layout for proper footer positioning
+- Created wrapper divs (page-wrapper and content-wrapper) for better layout control
+- Used static positioning for footer to prevent viewport sticking
+- Implemented "sticky footer" pattern that works with both short and long content
+- Maintained Fortnite theme consistency across layout changes
 
 ## Rationale
 - Prioritize user-facing bug fixes to improve UX
@@ -43,3 +53,5 @@
 - Use proper HTTP header manipulation methods to ensure consistent API communication
 - Implement robust error handling to improve reliability in real-world conditions
 - Add comprehensive logging to facilitate troubleshooting of intermittent issues
+- Maintain consistent user experience with custom error dialogs
+- Ensure proper page layout with flexible footer positioning

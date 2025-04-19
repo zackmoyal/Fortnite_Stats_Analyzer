@@ -369,30 +369,24 @@ table {
 
 /* Sticky Footer Styling */
 footer {
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-    border-top: 3px solid #feda4a; /* Fortnite yellow border */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Shadow for depth */
-    color: black;
-    font-size: 1.3rem;
-    text-align: center;
-    padding: 15px 0; /* Vertical centering */
     width: 100%;
-    z-index: 1000;
-    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #feda4a;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    position: static; /* Change from fixed to static */
 }
 
-    /* Footer Links */
-    footer a {
-        color: black;
-        text-decoration: none;
-        font-weight: bold;
-        margin-left: 5px; /* Space between text and link */
-        transition: color 0.3s ease;
-    }
+footer a {
+    color: #feda4a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
 
-        footer a:hover {
-            color: #feda4a; /* Fortnite yellow on hover */
-        }
+footer a:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
 
 /* Text shadow for the intro paragraph */
 .stats-section p {

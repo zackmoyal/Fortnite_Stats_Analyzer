@@ -15,10 +15,15 @@
 - Enhanced logging for better diagnostics
 - Added case-insensitive username handling for both "ZbiZniZ" and "zbizniz" variants
 - Implemented proper URL encoding for usernames with special characters
+- Replaced default browser error dialogs with custom Fortnite-themed error modal
+- Fixed footer positioning to prevent viewport sticking
+- Implemented proper layout structure with flexbox
+- Added client-side validation for better error handling
 
 ## 🔧 In Progress
 - Monitoring API stability with enhanced validation logic
 - Testing improved error handling with real-world usage
+- Testing new layout structure across different screen sizes
 
 ## 🐞 Known Issues
 - Intermittent validation issues may still occur due to API rate limiting
@@ -31,3 +36,5 @@
 - Add loading indicator during API calls
 - Implement client-side caching to reduce API calls
 - Add user feedback during retry attempts
+- Test layout structure on mobile devices
+- Add responsive design improvements

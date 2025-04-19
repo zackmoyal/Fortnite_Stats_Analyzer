@@ -51,7 +51,6 @@ namespace FortniteStatsAnalyzer.Controllers
         {
             if (string.IsNullOrEmpty(username))
             {
-                // Log and return error if username is not provided
                 _logger.LogWarning("No username provided by the user.");
                 ViewBag.Error = "Please enter a Fortnite username.";
                 return View("Index");
@@ -60,9 +59,8 @@ namespace FortniteStatsAnalyzer.Controllers
             // Fetch stats for the given username using the service
             var stats = await _fortniteStatsService.GetStatsForUser(username);
 
-            if (stats == null)
+            if (stats == null || !stats.Result)
             {
-                // Log and return error if no stats were retrieved
                 _logger.LogWarning("No stats found for the user: {Username}", username);
                 ViewBag.Error = "No player stats available. Please check the username and try again.";
                 return View("Index");

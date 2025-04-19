@@ -12,7 +12,6 @@
     <h1>Fortnite Stats Analyzer</h1>
     <p>Enter a Fortnite username to get their stats and get generated feedback!</p>
 
-    <!-- Add an ID to the form for easy selection -->
     <form id="usernameForm" method="post" asp-controller="Home" asp-action="GetStats">
         <div class="home-page-form-group">
             <label for="username">Enter Fortnite Username:</label>
@@ -22,58 +21,66 @@
     </form>
 </div>
 
-<div>
-    @if (ViewBag.Error != null)
-    {
-        <p class="text-danger">@ViewBag.Error</p>
-    }
-</div>
+@if (ViewBag.Error != null)
+{
+    @await Html.PartialAsync("_ErrorModal", (string)ViewBag.Error)
+}
 
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('form');
+            const form = document.querySelector('#usernameForm');
             const usernameInput = document.getElementById('username');
+            const allowedUsernames = ["ZbiZniZ", "Tfue", "Bugha", "Ninja"]; // stubbed for demo
+            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+
+            function showError(message) {
+                const errorMessage = document.querySelector('.error-message');
+                if (errorMessage) {
+                    errorMessage.textContent = message;
+                    errorModal.show();
+                }
+            }
 
             form.addEventListener('submit', async function (event) {
-                event.preventDefault(); // Prevent default form submission
+                event.preventDefault();
 
-                const username = usernameInput.value.trim();
-
-                // Client-side validation: Check if the username is empty
-                if (username === '') {
-                    alert("Please enter a username.");
+                const input = usernameInput.value.trim();
+                if (input === '') {
+                    showError("Please enter a username.");
                     return;
                 }
 
-                // Server-side validation: Check if the username is valid using AJAX
-                const isValid = await validateUsername(username);
+                // Check for case-sensitive match first
+                const exactMatch = allowedUsernames.find(name => name === input);
+                const closeMatch = allowedUsernames.find(name => name.toLowerCase() === input.toLowerCase());
 
-                if (isValid) {
-                    // If valid, proceed with form submission
-                    form.submit();
-                } else {
-                    alert("Invalid username. Please enter a valid Fortnite username.");
+                if (!exactMatch && closeMatch) {
+                    showError(`Username '${input}' is incorrect. Did you mean '${closeMatch}'? Please enter it with exact casing.`);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/Home/ValidateUsername?username=${encodeURIComponent(input)}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Only submit if validation is successful
+                        form.removeEventListener('submit', arguments.callee);
+                        form.submit();
+                    } else {
+                        // Show error in our custom modal
+                        showError(result.message || "Invalid username. Please enter a valid Fortnite username.");
+                    }
+                } catch (error) {
+                    console.error('Error validating username:', error);
+                    showError("An error occurred while validating the username. Please try again.");
                 }
             });
 
-            // Function to validate username using AJAX
-            async function validateUsername(username) {
-                try {
-                    const response = await fetch(`/Home/ValidateUsername?username=${encodeURIComponent(username)}`);
-
-                    if (!response.ok) {
-                        console.error('Error response from server:', response.statusText);
-                        return false;
-                    }
-
-                    const result = await response.json();
-
-                    return result.success; // Return true if valid, false otherwise
-                } catch (error) {
-                    console.error('Error validating username:', error);
-                    return false; // Return false on any error
-                }
+            // If there's an error message on page load, show it in our custom modal
+            if (document.querySelector('.error-message')?.textContent) {
+                errorModal.show();
             }
         });
     </script>
