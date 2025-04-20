@@ -20,7 +20,13 @@ builder.Services.AddScoped<FortniteStatsService>(); // Adds FortniteStatsService
 builder.Services.AddScoped<IOpenAIService, OpenAIService>();
 
 // Register FortniteApiSettings
-builder.Services.Configure<FortniteApiSettings>(builder.Configuration.GetSection("FortniteApiSettings")); // Binds FortniteApi settings from appsettings.json
+builder.Services.Configure<FortniteApiSettings>(builder.Configuration.GetSection("FortniteApi"));
+builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("OpenAI"));
+
+// Register services
+builder.Services.AddHttpClient<IFortniteApiService, FortniteApiService>();
+builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
+builder.Services.AddScoped<IFortniteStatsService, FortniteStatsService>();
 
 // Add logging
 builder.Services.AddLogging();
