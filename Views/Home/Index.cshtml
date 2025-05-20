@@ -1,87 +1,196 @@
 ﻿@{
-    ViewData["Title"] = "Fortnite Stats Analyzer";
+    ViewData["Title"] = "Home Page";
 }
 
-<header>
-    <div class="logo-container">
-        <img class="logo" src="/images/fortnite-logo.png" alt="Fortnite Logo" />
-    </div>
-</header>
-
-<div class="home-page-enter-username-section">
-    <h1>Fortnite Stats Analyzer</h1>
-    <p>Enter a Fortnite username to get their stats and get generated feedback!</p>
-
-    <form id="usernameForm" method="post" asp-controller="Home" asp-action="GetStats">
-        <div class="home-page-form-group">
-            <label for="username">Enter Fortnite Username:</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required />
+<div class="page-content">
+    <div class="logo-section">
+        <div class="logo-container">
+            <img class="logo" src="/images/fortnite-logo.png" alt="Fortnite Logo" />
         </div>
-        <button type="submit" class="btn">Get Stats</button>
-    </form>
+    </div>
+
+    <div class="main-content">
+        <div class="search-container">
+            <h1 class="text-center mb-4">Fortnite Stats Analyzer</h1>
+            <p class="text-center description">Enter your Fortnite username to get detailed stats analysis and personalized feedback for improvement!</p>
+            
+            <form id="statsForm" asp-controller="Home" asp-action="GetStats" method="post" class="search-form">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter Fortnite Username" required />
+                    <button id="submitButton" type="submit" class="btn btn-fortnite">
+                        <span class="button-text">Get Stats</span>
+                    </button>
+                </div>
+            </form>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Error))
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
-@if (ViewBag.Error != null)
-{
-    @await Html.PartialAsync("_ErrorModal", (string)ViewBag.Error)
+<!-- Error Modal -->
+<div class="modal" id="errorModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> 
+                    Error
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage" class="mb-0"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/'">Return Home</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .description {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            border: 4px solid #feda4a;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @@keyframes glow {
+            from { border-color: #feda4a; }
+            to { border-color: #0a74da; }
+        }
+
+        .search-form {
+            margin-top: 2rem;
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-control {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: #fff;
+            padding: 1rem;
+            font-size: 1.1rem;
+            height: 60px;
+            background-image: linear-gradient(#000, #000), linear-gradient(45deg, #0a74da, #feda4a);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-fortnite {
+            background: linear-gradient(45deg, #0a74da, #feda4a);
+            border: none;
+            color: #000;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            font-size: 1.9rem;
+            min-width: 180px;
+            text-transform: capitalize;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            flex-shrink: 0;
+        }
+
+        .btn-fortnite::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+            border-radius: 15px;
+        }
+
+        .btn-fortnite:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #feda4a, 0 0 30px #feda4a;
+        }
+
+        .btn-fortnite:hover::before {
+            left: 100%;
+        }
+
+        .btn-fortnite:disabled {
+            background: linear-gradient(45deg, #7fb8cf, #e6c976);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal-content {
+            background: #2d2d2d;
+            color: #fff;
+            border: 2px solid #feda4a;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #feda4a;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #feda4a;
+        }
+
+        .spinner-border {
+            margin-right: 0.5rem;
+        }
+    </style>
 }
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('#usernameForm');
-            const usernameInput = document.getElementById('username');
-            const allowedUsernames = ["ZbiZniZ", "Tfue", "Bugha", "Ninja"]; // stubbed for demo
-            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-
-            function showError(message) {
-                const errorMessage = document.querySelector('.error-message');
-                if (errorMessage) {
-                    errorMessage.textContent = message;
-                    errorModal.show();
-                }
-            }
-
-            form.addEventListener('submit', async function (event) {
-                event.preventDefault();
-
-                const input = usernameInput.value.trim();
-                if (input === '') {
-                    showError("Please enter a username.");
-                    return;
-                }
-
-                // Check for case-sensitive match first
-                const exactMatch = allowedUsernames.find(name => name === input);
-                const closeMatch = allowedUsernames.find(name => name.toLowerCase() === input.toLowerCase());
-
-                if (!exactMatch && closeMatch) {
-                    showError(`Username '${input}' is incorrect. Did you mean '${closeMatch}'? Please enter it with exact casing.`);
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`/Home/ValidateUsername?username=${encodeURIComponent(input)}`);
-                    const result = await response.json();
-
-                    if (result.success) {
-                        // Only submit if validation is successful
-                        form.removeEventListener('submit', arguments.callee);
-                        form.submit();
-                    } else {
-                        // Show error in our custom modal
-                        showError(result.message || "Invalid username. Please enter a valid Fortnite username.");
-                    }
-                } catch (error) {
-                    console.error('Error validating username:', error);
-                    showError("An error occurred while validating the username. Please try again.");
-                }
-            });
-
-            // If there's an error message on page load, show it in our custom modal
-            if (document.querySelector('.error-message')?.textContent) {
-                errorModal.show();
-            }
-        });
-    </script>
+    <script src="~/js/site.js"></script>
 }

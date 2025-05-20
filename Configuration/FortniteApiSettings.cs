@@ -1,6 +1,7 @@
-﻿namespace FortniteStatsAnalyzer.Configuration;
-
-public class FortniteApiSettings
+﻿namespace FortniteStatsAnalyzer.Configuration
 {
-    public string ApiKey { get; set; } = string.Empty;
+    public class FortniteApiSettings
+    {
+        public string ApiKey { get; set; } = string.Empty;
+    }
 }

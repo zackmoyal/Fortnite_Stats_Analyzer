@@ -10,26 +10,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews(); // Adds support for MVC and Razor views
 
-// Register HttpClient for API calls
+// Configure logging
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+});
+
+// Register configuration
+builder.Services.Configure<FortniteApiSettings>(builder.Configuration.GetSection("FortniteApiSettings"));
+builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("OpenAISettings"));
+
+// Register services with proper DI
 builder.Services.AddHttpClient();
-
-// Register FortniteStatsService
-builder.Services.AddScoped<FortniteStatsService>(); // Adds FortniteStatsService to the DI container
-
-// Register OpenAIService
+builder.Services.AddScoped<IFortniteApiService, FortniteApiService>();
 builder.Services.AddScoped<IOpenAIService, OpenAIService>();
-
-// Register FortniteApiSettings
-builder.Services.Configure<FortniteApiSettings>(builder.Configuration.GetSection("FortniteApi"));
-builder.Services.Configure<OpenAISettings>(builder.Configuration.GetSection("OpenAI"));
-
-// Register services
-builder.Services.AddHttpClient<IFortniteApiService, FortniteApiService>();
-builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
 builder.Services.AddScoped<IFortniteStatsService, FortniteStatsService>();
-
-// Add logging
-builder.Services.AddLogging();
 
 var app = builder.Build();
 

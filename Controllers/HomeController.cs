@@ -8,10 +8,10 @@ namespace FortniteStatsAnalyzer.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly FortniteStatsService _fortniteStatsService;
+        private readonly IFortniteStatsService _fortniteStatsService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(FortniteStatsService fortniteStatsService, ILogger<HomeController> logger)
+        public HomeController(IFortniteStatsService fortniteStatsService, ILogger<HomeController> logger)
         {
             _fortniteStatsService = fortniteStatsService;
             _logger = logger;

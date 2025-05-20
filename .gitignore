@@ -13,5 +13,6 @@ obj/
 
 # Ignore logs
 *.log
+
 # Local development secrets
 appsettings.Development.json

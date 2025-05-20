@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text;
+using System.Net.Http.Headers;
 
 namespace FortniteStatsAnalyzer.Services
 {
@@ -12,74 +13,129 @@ namespace FortniteStatsAnalyzer.Services
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly ILogger<OpenAIService> _logger;
         private const string API_URL = "https://api.openai.com/v1/chat/completions";
+        private readonly string _apiKey;
 
-        public OpenAIService(IConfiguration configuration, HttpClient httpClient)
+        public OpenAIService(IConfiguration configuration, HttpClient httpClient, ILogger<OpenAIService> logger)
         {
             _configuration = configuration;
             _httpClient = httpClient;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_configuration["OpenAISettings:ApiKey"]}");
+            _logger = logger;
+            
+            _apiKey = _configuration["OpenAISettings:ApiKey"];
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                throw new InvalidOperationException("OpenAI API key is not configured");
+            }
+
+            // Set up headers for OpenAI API
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<string> GenerateStatsFeedback(double kd, double winrate, int topPlacements, int totalKills, int matchesPlayed, string gameMode)
         {
-            var systemPrompt = @"You are an expert Fortnite coach analyzing player statistics. 
-            Your feedback should be comprehensive, specific, actionable, and encouraging.
-            Use Fortnite terminology naturally (e.g., Victory Royales, rotations, box fights, piece control, storm surge, tarping, tunneling).
-            Focus on both mechanical skills (building, editing, aiming) and game sense (positioning, rotations, decision-making, storm awareness).
-            Tailor advice based on their skill level shown in the stats.";
-
-            var userPrompt = $@"Analyze these Fortnite stats for {gameMode}:
-            - K/D Ratio: {kd:F2}
-            - Win Rate: {(winrate * 100):F1}%
-            - Victory Royales: {topPlacements}
-            - Total Kills: {totalKills}
-            - Matches Played: {matchesPlayed}
-
-            Provide detailed feedback (4-9 sentences) that:
-            1. Start with an overview of their playstyle based on stats
-            2. Highlight their strongest aspects (K/D, wins, etc.)
-            3. Analyze their combat effectiveness
-            4. Discuss their survival and winning strategies
-            5. Give 2-3 specific, actionable tips for improvement
-            6. End with an encouraging note about their potential
-            7. Use proper grammar and capitalization
-            8. Keep a positive, coaching tone throughout";
-
-            var requestBody = new
+            try
             {
-                model = "gpt-4.1-mini",
-                messages = new[]
+                var systemPrompt = @"You are an expert Fortnite coach analyzing player statistics. 
+                Provide personalized, specific feedback based on their stats.
+                Consider:
+                - K/D ratio trends and combat effectiveness
+                - Win rate and strategic decision-making
+                - Match volume and experience level
+                - Game mode specific strategies
+                - Recent meta changes and optimal strategies
+                
+                Use authentic Fortnite terminology like:
+                - Box fights, piece control, storm surge
+                - Rotations, tarping, tunneling
+                - Early/mid/late game strategies
+                - Zone positioning, height control
+                - Mechanical skills vs game sense
+                
+                Keep feedback encouraging but honest.";
+
+                var userPrompt = $@"Analyze these Fortnite {gameMode} stats:
+                K/D: {kd:F2}
+                Win Rate: {(winrate * 100):F1}%
+                Wins: {topPlacements}
+                Kills: {totalKills}
+                Matches: {matchesPlayed}
+
+                Provide detailed feedback that:
+                1. Evaluates their skill level (beginner/intermediate/advanced)
+                2. Analyzes combat effectiveness (K/D ratio analysis)
+                3. Reviews strategic success (win rate analysis)
+                4. Suggests 2-3 specific areas for improvement
+                5. Gives mode-specific tips for {gameMode}
+                6. Ends with an encouraging note
+
+                Format as 3-4 concise paragraphs with natural flow.
+                Use proper grammar and Fortnite terminology.
+                Be specific and actionable in advice.";
+
+                _logger.LogInformation("Generating feedback for {GameMode} stats", gameMode);
+
+                var requestBody = new
                 {
-                    new { role = "system", content = systemPrompt },
-                    new { role = "user", content = userPrompt }
-                },
-                temperature = 0.7,
-                max_tokens = 250,
-                presence_penalty = 0.1,
-                frequency_penalty = 0.1
-            };
+                    model = "gpt-3.5-turbo",
+                    messages = new[]
+                    {
+                        new { role = "system", content = systemPrompt },
+                        new { role = "user", content = userPrompt }
+                    },
+                    temperature = 0.7,
+                    max_tokens = 500
+                };
 
-            var response = await _httpClient.PostAsync(
-                API_URL,
-                new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
-            );
+                var jsonContent = JsonSerializer.Serialize(requestBody);
+                _logger.LogDebug("OpenAI Request: {Request}", jsonContent);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Knocked! The Battle Bus lost connection. Ready up and try dropping in again!");
+                // Create a new request message
+                var request = new HttpRequestMessage(HttpMethod.Post, API_URL)
+                {
+                    Content = new StringContent(jsonContent, Encoding.UTF8, "application/json")
+                };
+
+                // Ensure headers are set correctly for this specific request
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await _httpClient.SendAsync(request);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogDebug("OpenAI Response: {Response}", responseContent);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("OpenAI API error: {StatusCode} - {Content}", response.StatusCode, responseContent);
+                    throw new Exception($"OpenAI API error: {response.StatusCode}");
+                }
+
+                using JsonDocument doc = JsonDocument.Parse(responseContent);
+                var completion = doc.RootElement
+                    .GetProperty("choices")[0]
+                    .GetProperty("message")
+                    .GetProperty("content")
+                    .GetString();
+
+                if (string.IsNullOrEmpty(completion))
+                {
+                    throw new Exception("Empty feedback received from OpenAI API");
+                }
+
+                _logger.LogInformation("Successfully generated feedback for {GameMode}", gameMode);
+                return completion;
             }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<JsonElement>(responseContent);
-            var feedback = responseObject.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
-            
-            if (string.IsNullOrEmpty(feedback))
+            catch (Exception ex)
             {
-                throw new Exception("Eliminated! The storm surge knocked us out. Head back to the lobby and queue up again!");
+                _logger.LogError(ex, "Error generating feedback: {Message}", ex.Message);
+                return $"Unable to generate AI feedback at this time. Here's a basic analysis for your {gameMode} stats:\n\n" +
+                       $"Your K/D ratio of {kd:F2} and win rate of {(winrate * 100):F1}% show your current performance level. " +
+                       $"With {matchesPlayed} matches played and {topPlacements} wins, keep practicing to improve your skills. " +
+                       "Focus on building mechanics, positioning, and game awareness to enhance your gameplay.";
             }
-
-            return feedback;
         }
     }
-} 
+}
