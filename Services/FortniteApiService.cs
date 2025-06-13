@@ -25,16 +25,25 @@ namespace FortniteStatsAnalyzer.Services
 
         public FortniteApiService(
             IOptions<FortniteApiSettings> fortniteSettings,
-            ILogger<FortniteApiService> logger)
+            ILogger<FortniteApiService> logger,
+            HttpClient httpClient)
         {
             _fortniteApiKey = fortniteSettings?.Value?.ApiKey?.Trim() ?? throw new InvalidOperationException("Fortnite API key is not set correctly in configuration.");
             _logger = logger;
-            _client = new HttpClient();
-            
+            _client = httpClient;
+
             // Set up the headers once in constructor
             _client.DefaultRequestHeaders.Clear();
             _client.DefaultRequestHeaders.Add("Authorization", _fortniteApiKey);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        // Parameterless HttpClient constructor for backward compatibility and simpler instantiation
+        public FortniteApiService(
+            IOptions<FortniteApiSettings> fortniteSettings,
+            ILogger<FortniteApiService> logger)
+            : this(fortniteSettings, logger, new HttpClient())
+        {
         }
 
         public async Task<FortniteStatsResponse?> GetStatsForUser(string username)
