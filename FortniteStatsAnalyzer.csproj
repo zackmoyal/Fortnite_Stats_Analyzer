@@ -12,4 +12,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <!-- Exclude test project files from main compilation -->
+  <ItemGroup>
+    <Compile Remove="FortniteStatsAnalyzer.Tests\**\*.cs" />
+  </ItemGroup>
+
 </Project>
