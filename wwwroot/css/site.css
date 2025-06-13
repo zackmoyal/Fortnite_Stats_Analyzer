@@ -442,18 +442,51 @@ header img.logo {
     transition: all 0.3s ease;
     margin: 0 auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
-    .btn:hover {
+    .btn:not(:disabled):hover {
         background-color: #feda4a;
         transform: translateY(-3px);
         box-shadow: 0 0 15px #feda4a, 0 0 30px #feda4a; /* Glowing effect */
     }
 
-    .btn:active {
+    .btn:not(:disabled):active {
         transform: scale(0.98);
         box-shadow: none;
     }
+
+    .btn:disabled {
+        background: linear-gradient(45deg, #7fb8cf, #e6c976);
+        cursor: wait;
+        transform: none;
+        opacity: 0.9;
+    }
+
+    .btn:disabled:hover {
+        background: linear-gradient(45deg, #7fb8cf, #e6c976);
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+/* Button Loading State */
+.btn.loading {
+    pointer-events: none;
+    background: linear-gradient(45deg, #7fb8cf, #e6c976);
+    color: white;
+    cursor: wait;
+}
+
+.btn.loading:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn.loading .spinner-border {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
 
 /* Table Styling */
 table {

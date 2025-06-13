@@ -31,14 +31,25 @@
         }, { once: true });
     };
 
+    // Set loading state
+    const setLoadingState = (isLoading) => {
+        submitButton.disabled = isLoading;
+        if (isLoading) {
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+            submitButton.classList.add('loading');
+        } else {
+            submitButton.innerHTML = 'Get Stats';
+            submitButton.classList.remove('loading');
+        }
+    };
+
     // Form submission logic
     if (form) {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // Show loading state
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+            setLoadingState(true);
 
             try {
                 const username = usernameInput.value.trim();
@@ -62,10 +73,9 @@
             } catch (error) {
                 showError('An error occurred. Please try again.');
             } finally {
-                // Reset button state
+                // Reset button state after a delay
                 setTimeout(() => {
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = 'Get Stats';
+                    setLoadingState(false);
                 }, 2000);
             }
         });
