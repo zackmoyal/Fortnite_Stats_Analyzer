@@ -102,7 +102,7 @@ namespace FortniteStatsAnalyzer.Models
         [JsonProperty("level")]
         public int Level { get; set; }
 
-        [JsonProperty("process_pct")]
-        public int ProcessPct { get; set; }
+        [JsonProperty("progress_pct")]
+        public int ProgressPct { get; set; }
     }
 }
