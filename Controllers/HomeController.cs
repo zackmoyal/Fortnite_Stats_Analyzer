@@ -35,7 +35,7 @@ namespace FortniteStatsAnalyzer.Controllers
 
             var stats = await _fortniteStatsService.GetStatsForUser(username);
 
-            if (stats == null)
+            if (stats == null || !stats.Result)
             {
                 _logger.LogWarning("Validation failed: No stats found for username '{Username}'", username);
                 return Json(new { success = false, message = "Invalid username. Please try again." });
