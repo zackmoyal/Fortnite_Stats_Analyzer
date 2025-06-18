@@ -63,6 +63,11 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(0, 0, 0, 0.97); /* Nearly solid black */
+    border-radius: 16px;
+    padding: 0.7rem 2.5rem;
+    box-shadow: 0 0 16px 4px #feda4a, 0 0 0 4px #0a74da inset;
+    border: 2px solid #feda4a;
 }
 
 .nav-center {
@@ -73,21 +78,27 @@ header {
 
 .nav-link {
     font-size: 2rem;
-    font-weight: bold;
-    padding: 0 1rem;
-    color: white !important;
+    font-weight: normal;
+    font-family: 'FortniteBold', sans-serif;
+    padding: 0 1.7rem;
+    color: #feda4a !important;
     text-decoration: none;
     transition: color 0.3s ease;
+    text-shadow: none;
+    background: none;
+    border-radius: 8px;
 }
 
 .nav-link:hover {
-    color: #feda4a !important;
+    color: #fff !important;
+    background: none;
 }
 
 .nav-separator {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 2rem;
-    margin: 0 1rem;
+    color: #0a74da;
+    font-size: 2.2rem;
+    margin: 0 1.5rem;
+    text-shadow: 0 0 8px #fff, 1px 1px 6px #0a74da;
 }
 
 /* Main Content */
@@ -446,7 +457,7 @@ header img.logo {
     overflow: hidden;
 }
 
-    .btn:not(:disabled):hover {
+    .btn:not(:disabled):not(.loading):hover {
         background-color: #feda4a;
         transform: translateY(-3px);
         box-shadow: 0 0 15px #feda4a, 0 0 30px #feda4a; /* Glowing effect */
@@ -457,35 +468,63 @@ header img.logo {
         box-shadow: none;
     }
 
-    .btn:disabled {
+    .btn:disabled,
+    .btn.loading {
         background: linear-gradient(45deg, #7fb8cf, #e6c976);
         cursor: wait;
         transform: none;
         opacity: 0.9;
+        pointer-events: none;
     }
 
-    .btn:disabled:hover {
-        background: linear-gradient(45deg, #7fb8cf, #e6c976);
-        transform: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    .btn.loading {
+        color: black;
+        font-weight: bold;
+        background: linear-gradient(45deg, #7fb8cf, #feda4a);
+        animation: gradient 2s ease infinite;
+        background-size: 200% 200%;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
 
-/* Button Loading State */
-.btn.loading {
-    pointer-events: none;
-    background: linear-gradient(45deg, #7fb8cf, #e6c976);
-    color: white;
-    cursor: wait;
+    .spinner-border {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 0.2em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spinner-border 0.75s linear infinite;
+    }
+
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
+    }
+
+    .btn.loading .spinner-border {
+        margin-right: 8px;
+        vertical-align: middle;
+        border-color: black;
+        border-right-color: transparent;
+    }
+
+@keyframes spinner-border {
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-.btn.loading:hover {
-    transform: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.btn.loading .spinner-border {
-    margin-right: 0.5rem;
-    vertical-align: middle;
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Table Styling */
@@ -495,27 +534,31 @@ table {
     margin-bottom: 30px;
     text-align: center;
     color: white;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
 }
 
     table th {
-        font-size: 1.4rem;
-        color: #feda4a; /* Bright Fortnite yellow */
-        background: rgba(0, 0, 0, 0.8); /* Darker background for the headers */
-        padding: 10px;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-        border-bottom: 1px solid #ddd;
+        font-size: 1.8rem;
+        color: black;
+        background: linear-gradient(135deg, #feda4a, #e6c976);
+        padding: 15px;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        border-bottom: 2px solid #0a74da;
         font-family: 'FortniteBold', sans-serif;
+        letter-spacing: 0.5px;
     }
 
     table td {
         color: white;
-        padding: 10px;
-        font-size: 1.3rem;
-        background: rgba(0, 0, 0, 0.5);
-        border-bottom: 1px solid #ddd;
-        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); /* Text shadow effect */
+        padding: 12px;
+        font-size: 1.4rem;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba(254, 218, 74, 0.3);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     }
 
 /* Text shadow for the intro paragraph */
